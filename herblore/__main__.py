@@ -3,9 +3,18 @@ import os
 from pyglet.window import key
 from pyglet.window import mouse
 from pyglet import clock
+from pyglet.gl import *
 
 # Create window
-window = pyglet.window.Window(fullscreen=True)
+window = pyglet.window.Window()
+
+# Scale stuff
+glScalef(1.0, 1.0, 1.0)
+
+# Set up custom mouse cursor
+mouse_image = pyglet.resource.image('assets/sprites/cursor.png')
+cursor = pyglet.window.ImageMouseCursor(mouse_image, 20, 28)
+window.set_mouse_cursor(cursor)
 
 # Keyboard input
 keys_held = []
@@ -34,6 +43,7 @@ terrain_image = pyglet.image.load("herblore/assets/sprites/map.png")
 # Set up player sprites
 player_image = pyglet.resource.image("assets/sprites/player.png")
 player_sprite = pyglet.sprite.Sprite(player_image)
+player_sprite.scale = 0.2
 
 # Update function called all the time
 def update(interval):
