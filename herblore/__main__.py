@@ -5,7 +5,7 @@ from pyglet.window import mouse
 from pyglet import clock
 
 # Create window
-window = pyglet.window.Window()
+window = pyglet.window.Window(fullscreen=True)
 
 # Keyboard input
 keys_held = []
@@ -28,7 +28,10 @@ def on_mouse_press(x, y, button, modifiers):
     if button == mouse.RIGHT:
         print 'The right mouse button was pressed.'
 
-# Set up play sprites
+# Set up background map
+terrain_image = pyglet.image.load("herblore/assets/sprites/map.png")
+
+# Set up player sprites
 player_image = pyglet.resource.image("assets/sprites/player.png")
 player_sprite = pyglet.sprite.Sprite(player_image)
 
@@ -49,6 +52,7 @@ clock.schedule_interval(update, .01)
 @window.event
 def on_draw():
     window.clear()
+    terrain_image.blit(0,0)
     player_sprite.draw()
 
 # Begin application
