@@ -1,4 +1,4 @@
 herblore
 ========
 
-A Python OpenGL Game
+A Python OpenGL Game 
