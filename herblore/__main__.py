@@ -12,7 +12,10 @@ import physics
 from player import *
 
 # Create window
-window = pyglet.window.Window(fullscreen = True)
+window = pyglet.window.Window()
+
+# Fullscreen toggle variable
+first_f1_hit = False
 
 # Scale stuff
 glScalef(1.0, 1.0, 1.0)
@@ -27,13 +30,15 @@ keys_held = []
 
 @window.event
 def on_key_press(symbol, modifiers):
+    global first_f1_hit
     keys_held.append(symbol)
-    if symbol == key.PAGEUP:
-        player_sprite.scale = .3
-	terrain_sprite.scale = .3
-    if symbol == key.PAGEDOWN:
-        player_sprite.scale = 0.2
-	terrain_sprite.scale = 0.2
+    if symbol == key.F1:
+        if first_f1_hit == False:
+	    window.set_fullscreen(True)
+	    first_f1_hit = True
+	else:
+	    window.set_fullscreen(False)
+	    first_f1_hit = False
 
 @window.event
 def on_key_release(symbol, modifiers):
@@ -63,7 +68,6 @@ player_level_label = pyglet.text.Label("Level " + str(current_player.level),
                           font_name='Garamond',
                           font_size=15,
                           x=3, y=3)
-
 
 # Set up player sprites
 player_image = pyglet.resource.image("assets/sprites/player.png")
