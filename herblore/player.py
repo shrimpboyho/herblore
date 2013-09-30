@@ -4,3 +4,4 @@ class Player:
       self.username = username
       self.team = team
       self.hero = hero
+      self.level = 1

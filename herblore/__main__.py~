@@ -12,7 +12,7 @@ import physics
 from player import *
 
 # Create window
-window = pyglet.window.Window(fullscreen = True)
+window = pyglet.window.Window()
 
 # Scale stuff
 glScalef(1.0, 1.0, 1.0)
@@ -29,9 +29,11 @@ keys_held = []
 def on_key_press(symbol, modifiers):
     keys_held.append(symbol)
     if symbol == key.PAGEUP:
-        glScalef(2.0, 2.0, 2.0)
+        player_sprite.scale = .3
+	terrain_sprite.scale = .3
     if symbol == key.PAGEDOWN:
-        glScalef(0.5, 0.5, 0.5)
+        player_sprite.scale = 0.2
+	terrain_sprite.scale = 0.2
 
 @window.event
 def on_key_release(symbol, modifiers):
@@ -51,6 +53,17 @@ terrain_sprite =  pyglet.sprite.Sprite(terrain_image)
 
 # Create a player object
 current_player = Player("jewishBoy", "Dire", "Lina")
+
+# Create the custom player HUD stuff
+player_name_label = pyglet.text.Label(current_player.username,
+                          font_name='Garamond',
+                          font_size=18,
+                          x=3, y=20)
+player_level_label = pyglet.text.Label("Level " + str(current_player.level),
+                          font_name='Garamond',
+                          font_size=15,
+                          x=3, y=3)
+
 
 # Set up player sprites
 player_image = pyglet.resource.image("assets/sprites/player.png")
@@ -91,9 +104,19 @@ clock.schedule_interval(update, .01)
 # Draw
 @window.event
 def on_draw():
+    # Clear the current stuff
     window.clear()
+
+    # Draw the terrain
     terrain_sprite.draw()
+
+    # Draw the sprite
     player_sprite.draw()
+    
+    # Draw the HUD
+    player_name_label.draw()
+    player_level_label.draw()
+
     #print(str(player_sprite.x) + ',' + str(player_sprite.y))
 
 # Begin application
