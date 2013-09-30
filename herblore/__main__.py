@@ -39,15 +39,13 @@ def on_key_press(symbol, modifiers):
 	    window.set_fullscreen(True)
 	    player_sprite.x = window.width/2
             player_sprite.y = window.height/2
-	    terrain_sprite.x = window.width/2
-            terrain_sprite.y = window.height/2
+	    current_player.teleport(current_player.coordX,current_player.coordY,terrain_sprite,window)
 	    first_f1_hit = True
 	else:
 	    window.set_fullscreen(False)
 	    player_sprite.x = window.width/2
             player_sprite.y = window.height/2
-	    terrain_sprite.x = window.width/2
-            terrain_sprite.y = window.height/2
+	    current_player.teleport(current_player.coordX,current_player.coordY,terrain_sprite,window)
 	    first_f1_hit = False
     
 @window.event
