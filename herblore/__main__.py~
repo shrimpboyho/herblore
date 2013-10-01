@@ -5,8 +5,9 @@ from pyglet.window import mouse
 from pyglet import clock
 from pyglet.gl import *
 
-# Import the physics engine
+# Import the physics engine and other important tools
 import physics
+from position import *
 
 # Import the player class
 from player import *
@@ -37,10 +38,12 @@ def on_key_press(symbol, modifiers):
     if symbol == key.F1:
         if first_f1_hit == False:
 	    window.set_fullscreen(True)
+	    center_sprite(player_sprite)
 	    current_player.teleport(current_player.coordX,current_player.coordY,terrain_sprite,window)
 	    first_f1_hit = True
 	else:
 	    window.set_fullscreen(False)
+	    center_sprite(player_sprite)
 	    current_player.teleport(current_player.coordX,current_player.coordY,terrain_sprite,window)
 	    first_f1_hit = False
     
@@ -60,8 +63,7 @@ def on_mouse_press(x, y, button, modifiers):
 
 # Set up background map
 terrain_image = pyglet.image.load("herblore/assets/sprites/map.png")
-terrain_image.anchor_x = terrain_image.width / 2
-terrain_image.anchor_y = terrain_image.height / 2
+center_image(terrain_image)
 terrain_sprite =  pyglet.sprite.Sprite(terrain_image)
 
 # Create a player object
@@ -85,12 +87,10 @@ player_sprite = pyglet.sprite.Sprite(player_image)
 player_sprite.scale = 0.2
 
 # Set up player in center of the screen
-player_sprite.x = window.width/2
-player_sprite.y = window.height/2
+center_sprite(player_sprite,window)
 
 # Draw the map
-terrain_sprite.x = window.width/2
-terrain_sprite.y = window.height/2
+center_sprite(terrain_sprite,window)
 
 if(current_player.team == "Dire"):
     current_player.teleport(182,164,terrain_sprite,window)
