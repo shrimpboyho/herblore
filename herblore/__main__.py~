@@ -38,12 +38,12 @@ def on_key_press(symbol, modifiers):
     if symbol == key.F1:
         if first_f1_hit == False:
 	    window.set_fullscreen(True)
-	    center_sprite(player_sprite)
+	    center_sprite(player_sprite,window)
 	    current_player.teleport(current_player.coordX,current_player.coordY,terrain_sprite,window)
 	    first_f1_hit = True
 	else:
 	    window.set_fullscreen(False)
-	    center_sprite(player_sprite)
+	    center_sprite(player_sprite,window)
 	    current_player.teleport(current_player.coordX,current_player.coordY,terrain_sprite,window)
 	    first_f1_hit = False
     
@@ -69,16 +69,6 @@ terrain_sprite =  pyglet.sprite.Sprite(terrain_image)
 # Create a player object
 current_player = Player("jewishBoy", "Radiant", "Lina")
 
-# Create the custom player HUD stuff
-player_name_label = pyglet.text.Label(current_player.username,
-                          font_name='Garamond',
-                          font_size=18,
-                          x=3, y=20)
-player_level_label = pyglet.text.Label("Level " + str(current_player.level),
-                          font_name='Garamond',
-                          font_size=15,
-                          x=3, y=3)
-
 # Set up player sprites
 player_image = pyglet.resource.image("assets/sprites/player.png")
 player_image.anchor_x = player_image.width / 2
@@ -89,9 +79,27 @@ player_sprite.scale = 0.2
 # Set up player in center of the screen
 center_sprite(player_sprite,window)
 
+# Add the player sprite to the player object
+current_player.setSprite(player_sprite)
+
+# Add the player to the entities
+physics.entities.append(current_player)
+physics.entities.append(5)
+
+# Create the custom player HUD stuff
+player_name_label = pyglet.text.Label(current_player.username,
+                          font_name='Garamond',
+                          font_size=18,
+                          x=3, y=20)
+player_level_label = pyglet.text.Label("Level " + str(current_player.level),
+                          font_name='Garamond',
+                          font_size=15,
+                          x=3, y=3)
+
 # Draw the map
 center_sprite(terrain_sprite,window)
 
+# Set up spawn points based on player's team
 if(current_player.team == "Dire"):
     current_player.teleport(182,164,terrain_sprite,window)
 if(current_player.team == "Radiant"):
@@ -99,16 +107,16 @@ if(current_player.team == "Radiant"):
 
 # Update function called all the time to handle input
 def update(interval):
-    if key.W in keys_held:
+    if key.W in keys_held and current_player.coordY < 182:
 	current_player.coordY += 1
 	terrain_sprite.y -= 3
-    if key.S in keys_held:
+    if key.S in keys_held and current_player.coordY > -175:
 	current_player.coordY -= 1
 	terrain_sprite.y += 3
-    if key.A in keys_held:
+    if key.A in keys_held and current_player.coordX > -190:
 	current_player.coordX -= 1    
 	terrain_sprite.x += 3
-    if key.D in keys_held:
+    if key.D in keys_held and current_player.coordX < 195:
 	current_player.coordX += 1
 	terrain_sprite.x -= 3
 
@@ -124,8 +132,9 @@ def on_draw():
     # Draw the terrain
     terrain_sprite.draw()
 
-    # Draw the sprite
-    player_sprite.draw()
+    # Draw all the entities
+    for thing in physics.entities:
+	thing.getSprite().draw()
     
     # Draw the HUD
     player_name_label.draw()
