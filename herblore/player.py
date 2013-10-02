@@ -21,3 +21,10 @@ class Player:
 
     def getSprite(self):
 	return self.sprite
+
+    def respawn(self,terrain_sprite,window):   
+        """Set up player spawn points based on player's team"""
+        if(self.team == "Dire"):
+            self.teleport(182,164,terrain_sprite,window)
+        if(self.team == "Radiant"):
+            self.teleport(-182,-164,terrain_sprite,window)

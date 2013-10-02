@@ -9,8 +9,9 @@ from pyglet.gl import *
 import physics
 from position import *
 
-# Import the player class
+# Import the player and entity classes
 from player import *
+from entity import *
 
 # Create window
 window = pyglet.window.Window()
@@ -26,7 +27,7 @@ mouse_image = pyglet.resource.image('assets/sprites/cursor.png')
 cursor = pyglet.window.ImageMouseCursor(mouse_image, 20, 28)
 window.set_mouse_cursor(cursor)
 
-# Keyboard input
+# Keyboard input buffer
 keys_held = []
 
 @window.event
@@ -71,19 +72,25 @@ current_player = Player("jewishBoy", "Radiant", "Lina")
 
 # Set up player sprites
 player_image = pyglet.resource.image("assets/sprites/player.png")
-player_image.anchor_x = player_image.width / 2
-player_image.anchor_y = player_image.height / 2
+center_image(player_image)
 player_sprite = pyglet.sprite.Sprite(player_image)
 player_sprite.scale = 0.2
+
+monkey_image = pyglet.resource.image("assets/sprites/monkey.jpg")
+center_image(monkey_image)
+monkey_sprite = pyglet.sprite.Sprite(monkey_image)
+monkey_sprite.scale = 0.2
+monkey_player = Entity("monkey", "Dire", "Rex")
 
 # Set up player in center of the screen
 center_sprite(player_sprite,window)
 
 # Add the player sprite to the player object
 current_player.setSprite(player_sprite)
+monkey_player.setSprite(monkey_sprite)
 
 # Add the player to the entities
-physics.entities.append(current_player)
+physics.entities.append(monkey_player)
 
 # Create the custom player HUD stuff
 player_name_label = pyglet.text.Label(current_player.username,
@@ -98,26 +105,32 @@ player_level_label = pyglet.text.Label("Level " + str(current_player.level),
 # Draw the map
 center_sprite(terrain_sprite,window)
 
-# Set up spawn points based on player's team
-if(current_player.team == "Dire"):
-    current_player.teleport(182,164,terrain_sprite,window)
-if(current_player.team == "Radiant"):
-    current_player.teleport(-182,-164,terrain_sprite,window)
+# Spawn the player
+current_player.respawn(terrain_sprite,window)
+monkey_player.respawn(terrain_sprite,window)
 
 # Update function called all the time to handle input
 def update(interval):
     if key.W in keys_held and current_player.coordY < 182:
 	current_player.coordY += 1
 	terrain_sprite.y -= 3
+	for thing in physics.entities:
+	    thing.getSprite().y -= 3
     if key.S in keys_held and current_player.coordY > -175:
 	current_player.coordY -= 1
 	terrain_sprite.y += 3
+	for thing in physics.entities:
+	    thing.getSprite().y += 3
     if key.A in keys_held and current_player.coordX > -190:
 	current_player.coordX -= 1    
 	terrain_sprite.x += 3
+	for thing in physics.entities:
+	    thing.getSprite().x += 3
     if key.D in keys_held and current_player.coordX < 195:
 	current_player.coordX += 1
 	terrain_sprite.x -= 3
+	for thing in physics.entities:
+	    thing.getSprite().x -= 3
 
 # Set up interval
 clock.schedule_interval(update, .01)
@@ -130,6 +143,9 @@ def on_draw():
 
     # Draw the terrain
     terrain_sprite.draw()
+    
+    # Draw the player
+    current_player.getSprite().draw()
 
     # Draw all the entities
     for thing in physics.entities:

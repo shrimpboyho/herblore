@@ -1,4 +1,4 @@
-class Player:
+class Entity:
 
     def __init__(self,username, team, hero):
         self.username = username
@@ -8,19 +8,11 @@ class Player:
         self.coordX = 0
         self.coordY = 0
 
-    def teleport(self, x, y, terrain_sprite, window):
-        terrain_sprite.x = window.width/2
-        terrain_sprite.y = window.height/2
-        terrain_sprite.x -=  3 * x
-        terrain_sprite.y -= 3 * y
+    def setPosition(self, x, y, terrain_sprite, window):
+        self.getSprite().x = x + terrain_sprite.x
+        self.getSprite().y = y + terrain_sprite.y
         self.coordX = x
         self.coordY = y
-    
-    def setPosition(self, x, y, terrain_sprite, window):
-        terrain_sprite.x -=  3 * x
-        terrain_sprite.y -= 3 * y
-        self.getSprite().x = 359
-        self.getSprite().y = 240
 
     def setSprite(self,sprite):
         self.sprite = sprite
@@ -31,6 +23,7 @@ class Player:
     def respawn(self,terrain_sprite,window):   
         """Set up player spawn points based on player's team"""
         if(self.team == "Dire"):
-            self.teleport(182,164,terrain_sprite,window)
+            self.setPosition(182,164,terrain_sprite,window)
         if(self.team == "Radiant"):
-            self.teleport(-182,-164,terrain_sprite,window)
+            self.setPosition(-182,-164,terrain_sprite,window)
+

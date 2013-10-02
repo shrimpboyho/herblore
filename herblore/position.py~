@@ -4,6 +4,13 @@ def center_image(image):
     image.anchor_y = image.height/2
 
 def center_sprite(sprite,window): 
-    """Sets an image's anchor point to its center""" 
+    """Sets an sprite to the center of the window""" 
     sprite.x = window.width/2 
     sprite.y = window.height/2
+
+def respawn(current_player,terrain_sprite,window):   
+    """Set up player spawn points based on player's team"""
+    if(current_player.team == "Dire"):
+        current_player.teleport(182,164,terrain_sprite,window)
+    if(current_player.team == "Radiant"):
+        current_player.teleport(-182,-164,terrain_sprite,window)
